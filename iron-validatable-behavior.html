@@ -36,6 +36,15 @@ Use `Polymer.IronValidatableBehavior` to implement an element that validates use
         type: String
       },
 
+      /**
+       * True if the last call to `validate` is invalid.
+       */
+      invalid: {
+        reflectToAttribute: true,
+        type: Boolean,
+        value: false
+      },
+
       _validatorMeta: {
         type: Object
       }
@@ -51,10 +60,19 @@ Use `Polymer.IronValidatableBehavior` to implement an element that validates use
     },
 
     /**
+     * Returns true if there is a validator.
+     */
+    hasValidator: function() {
+      return this._validator != null;
+    },
+
+    /**
      * Validates the value.
      */
     validate: function(values) {
-      return this._validator && this._validator.validate(values);
+      var valid = this._validator && this._validator.validate(values);
+      this.invalid = !valid;
+      return valid;
     }
 
   };
