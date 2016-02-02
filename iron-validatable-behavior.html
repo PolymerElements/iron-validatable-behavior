@@ -40,15 +40,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   Polymer.IronValidatableBehavior = {
 
     properties: {
-
-      /**
-       * Namespace for this validator.
-       */
-      validatorType: {
-        type: String,
-        value: 'validator'
-      },
-
       /**
        * Name of the validator to use.
        */
@@ -81,7 +72,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     ready: function() {
-      this._validatorMeta = new Polymer.IronMeta({type: this.validatorType});
+      this._validatorMeta = Polymer.IronMeta.getIronMeta();
     },
 
     _invalidChanged: function() {
