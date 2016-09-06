@@ -205,6 +205,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 else if (meta && meta.byKey(v)) {
                     result[v] = meta.byKey(v);
                 }
+                // No instance at all, create one
+                else if (!meta || !meta.byKey(v)) {
+                    result[v] = document.createElement(v);
+                }
             });
 
             return result;
