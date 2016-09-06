@@ -20,7 +20,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../../paper-styles/demo-pages.html">
-  <link rel="import" href="cats-only.html">
+  <link rel="import" href="validators/cats-only.html">
+  <link rel="import" href="validators/no-cats.html">
+  <link rel="import" href="validators/no-catfishes.html">
   <link rel="import" href="validatable-input.html">
 
   <style is="custom-style">
@@ -43,16 +45,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template is="dom-bind">
 
     <cats-only></cats-only>
+    <no-cats></no-cats>
+    <no-catfishes></no-catfishes>
 
     <section>
 
       <p>
-        only type <code>cats</code>:
+        only type <code>cats</code>:<br/>
 
-        <input is="validatable-input" invalid="{{invalid}}" validator="cats-only">
+        <input is="validatable-input" invalid="{{invalid.a}}" validator="cats-only">
+        <br/>
+        <span class="valid" hidden$="[[invalid.a]]">valid</span>
+        <span class="invalid" hidden$="[[!invalid.a]]">invalid</span>
+      </p>
 
-        <span class="valid" hidden$="[[invalid]]">valid</span>
-        <span class="invalid" hidden$="[[!invalid]]">invalid</span>
+      <p>
+        no <code>cat(fishes)</code>:<br/>
+
+        <input id="multiple" is="validatable-input" invalid="{{invalid.b}}" validator="no-cats no-catfishes" errors="{{errors}}">
+        <br/>
+        <span class="valid" hidden$="[[invalid.b]]">valid</span>
+        <template is="dom-repeat" items="[[errors]]">
+          <div class="invalid">[[item.priority]]: [[item.message]]</div>
+        </template>
+
       </p>
 
     </section>
@@ -62,9 +78,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </div>
 
   <script>
-
-    document.querySelector('template[is="dom-bind"]').invalid = false;
-
+    var scope = document.querySelector('template[is="dom-bind"]');
+    scope.invalid = { a: false, b: false };
   </script>
 
 </body>

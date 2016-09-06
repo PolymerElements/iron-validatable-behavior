@@ -24,8 +24,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="test-validatable.html">
-  <link rel="import" href="cats-only.html">
-  <link rel="import" href="dogs-only.html">
+  <link rel="import" href="validators/cats-only.html">
+  <link rel="import" href="validators/dogs-only.html">
+  <link rel="import" href="validators/no-cats.html">
+  <link rel="import" href="validators/no-catfishes.html">
 
 </head>
 <body>
@@ -41,6 +43,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <cats-only></cats-only>
       <dogs-only></dogs-only>
       <test-validatable></test-validatable>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="multipleValidators">
+    <template>
+      <no-cats></no-cats>
+      <no-catfishes></no-catfishes>
+      <test-validatable validator="no-cats no-catfishes"></test-validatable>
     </template>
   </test-fixture>
 
@@ -79,6 +89,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         input.validator = 'dogs-only';
         assert.isFalse(input.validate('cats'));
         assert.isTrue(input.validate('dogs'));
+      });
+
+    });
+
+    suite('multiple validators', function() {
+
+      test('adds multiple validators as an object with validator references', function() {
+        var validatable = fixture('multipleValidators')[2];
+        assert.equal(Object.keys(validatable._validator).length, 2);
+        assert.equal(Object.keys(validatable._validator)[0], 'no-cats');
+        assert.equal(Object.keys(validatable._validator)[1], 'no-catfishes');
+      });
+
+      test('uses functionality of added validators', function() {
+        var node = fixture('multipleValidators');
+        sinon.spy(node[0], 'validate');
+        sinon.spy(node[1], 'validate');
+        node[2].validate();
+        assert(node[0].validate.called);
+        assert(node[1].validate.called);
+      });
+
+      test('valid when all validators valid', function() {
+        var validatable = fixture('multipleValidators')[2];
+        validatable.validate('');
+        assert.equal(validatable.invalid, false);
+      });
+
+      test('invalid when one validator invalid', function() {
+        var validatable = fixture('multipleValidators')[2];
+        validatable.validate('catfish');
+        assert.equal(validatable.invalid, true);
+        assert.equal(validatable.errors.length, 1);
+      });
+
+    });
+
+    suite('error messages', function() {
+
+      test('adds an error array with objects containing names, messages and priorities', function() {
+        var validatable = fixture('multipleValidators')[2];
+        validatable.validate('cat');
+        assert.equal(validatable.errors.length, 2);
+        assert.equal(validatable.errors[0].name, 'no-cats');
+        assert.equal(validatable.errors[0].message, 'No cat(s) allowed');
+        assert.equal(validatable.errors[0].priority, 0);
+        assert.equal(validatable.errors[1].name, 'no-catfishes');
+        assert.equal(validatable.errors[1].message, 'No cat(fish(es)) allowed');
+        assert.equal(validatable.errors[1].priority, 1);
+      });
+
+      test('uses validator order for prioritizing messages', function() {
+        var validatable = fixture('multipleValidators')[2];
+        validatable.validate('cat');
+        assert.equal(validatable.errors[0].priority, 0);
+        assert.equal(validatable.errors[1].priority, 1);
       });
 
     });
