@@ -46,7 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <cats-only></cats-only>
     <no-cats></no-cats>
-    <no-catfishes></no-catfishes>
+    <no-catfishes for="customCatfish" message="Custom catfish message"></no-catfishes>
 
     <section>
 
@@ -62,7 +62,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <p>
         no <code>cat(fishes)</code>:<br/>
 
-        <input id="multiple" is="validatable-input" invalid="{{invalid.b}}" validator="no-cats no-catfishes" errors="{{errors}}">
+        <input id="multiple" validatable-id="customCatfish" is="validatable-input" invalid="{{invalid.b}}" validator="no-cats no-catfishes" errors="{{errors}}">
         <br/>
         <span class="valid" hidden$="[[invalid.b]]">valid</span>
         <template is="dom-repeat" items="[[errors]]">

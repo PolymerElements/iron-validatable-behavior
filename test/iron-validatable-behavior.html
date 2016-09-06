@@ -54,6 +54,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="customErrorMessages">
+    <template>
+      <no-cats for="customCats" message="custom cats"></no-cats>
+      <test-validatable validator="no-cats" validatable-id="customCats"></test-validatable>
+    </template>
+  </test-fixture>
+
   <script>
 
     suite('basic', function() {
@@ -145,6 +152,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         validatable.validate('cat');
         assert.equal(validatable.errors[0].priority, 0);
         assert.equal(validatable.errors[1].priority, 1);
+      });
+
+      test('adds custom error messages', function() {
+        var validatable = fixture('customErrorMessages')[1];
+        validatable.validate('cats');
+        assert.equal(validatable.errors[0].message, 'custom cats');
       });
 
     });

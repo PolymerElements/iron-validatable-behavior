@@ -102,6 +102,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 value: function () {
                     return [];
                 }
+            },
+
+            /**
+             * The id used to connect the validator instance implementing IronValidatableBehavior(having a 'for' property)
+             * to the validatable. This is useful for validator instances containing custom messages.
+             */
+            validatableId: {
+                type: String
             }
 
         },
@@ -184,11 +192,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          */
         __computeValidator: function () {
             var result = {};
+            var suffix = '--' + this.validatableId; // Suffix needed for specific instances of custom validators, overriding the default error message
             var meta = Polymer.IronValidatableBehaviorMeta;
             var validators = this.validator.replace(/\s+/g, ' ').split(' ');
 
             validators.forEach(function (v) {
-                if (meta && meta.byKey(v)) {
+                // Custom instance exists
+                if (meta && meta.byKey(v + suffix)) {
+                    result[v] = meta.byKey(v + suffix);
+                }
+                // Default instance exists
+                else if (meta && meta.byKey(v)) {
                     result[v] = meta.byKey(v);
                 }
             });
