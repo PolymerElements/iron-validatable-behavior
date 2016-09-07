@@ -1,0 +1,21 @@
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../iron-validator-behavior/iron-native-validator.html">
+
+<dom-module id="native-validators-config">
+    <template>
+        <!--Register all native validators with a custom message-->
+        <iron-native-validator validator-name="required" message="Please fill in this field" id="instance"></iron-native-validator>
+        <iron-native-validator validator-name="max" message="less"></iron-native-validator>
+        <iron-native-validator validator-name="min" message="more"></iron-native-validator>
+        <iron-native-validator validator-name="step" message="step"></iron-native-validator>
+        <iron-native-validator validator-name="maxlength" message="shorter"></iron-native-validator>
+        <iron-native-validator validator-name="minlength" message="longer"></iron-native-validator>
+        <iron-native-validator validator-name="pattern" message="either regex or input invalid"></iron-native-validator>
+        <iron-native-validator validator-name="emailtype" message="no valid e-mail"></iron-native-validator>
+        <iron-native-validator validator-name="urltype" message="no valid url"></iron-native-validator>
+    </template>
+
+    <script>
+        Polymer({is: 'native-validators-config'});
+    </script>
+</dom-module>
