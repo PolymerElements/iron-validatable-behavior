@@ -1,0 +1,64 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-validator-behavior/iron-native-validator.html">
+
+
+<!--Register all native validators with a custom message-->
+
+<dom-module id="native-validators-config">
+
+    <template>
+
+        <iron-native-validator validator-name="required" message="[[messages.required]]" id="instance"></iron-native-validator>
+        <iron-native-validator validator-name="max" message="[[messages.max]]"></iron-native-validator>
+        <iron-native-validator validator-name="min" message="[[messages.min]]"></iron-native-validator>
+        <iron-native-validator validator-name="step" message="[[messages.step]]"></iron-native-validator>
+        <iron-native-validator validator-name="maxlength" message="[[messages.maxlength]]"></iron-native-validator>
+        <iron-native-validator validator-name="minlength" message="[[messages.minlength]]"></iron-native-validator>
+        <iron-native-validator validator-name="pattern" message="[[messages.pattern]]"></iron-native-validator>
+        <iron-native-validator validator-name="emailtype" message="[[messages.emailtype]]"></iron-native-validator>
+        <iron-native-validator validator-name="urltype" message="[[messages.urltype]]"></iron-native-validator>
+
+    </template>
+
+    <script>
+
+        Polymer({
+
+            is: 'native-validators-config',
+
+            properties: {
+                messages: {
+                    type: Object,
+                    value: function () {
+                        return {
+                            required: 'value missing',
+                            max: 'less',
+                            min: 'more',
+                            step: 'step',
+                            maxlength: 'shorter',
+                            minlength: 'longer',
+                            pattern: 'either regex or input invalid',
+                            emailtype: 'no valid e-mail',
+                            urltype: 'no valid url'
+                        }
+                    }
+
+                }
+            },
+
+            ready: function() {
+                // Overriding via one instance, will set the method for every instance
+                this.$.instance.overrideValidationMethod('minlength', function(value, input) {
+                    var minlength = input.getAttribute('minlength');
+                    return value == '' || !minlength || value.length >= minlength;
+                });
+                this.$.instance.overrideValidationMethod('maxlength', function(value, input) {
+                    var maxlength = input.getAttribute('maxlength');
+                    return value == '' || !maxlength || value.length <= maxlength;
+                });
+            }
+        });
+
+    </script>
+
+</dom-module>

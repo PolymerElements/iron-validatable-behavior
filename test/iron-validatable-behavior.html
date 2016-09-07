@@ -28,6 +28,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="validators/dogs-only.html">
   <link rel="import" href="validators/no-cats.html">
   <link rel="import" href="validators/no-catfishes.html">
+  <link rel="import" href="../../iron-validator-behavior/iron-native-validator.html">
+  <link rel="import" href="../../iron-input/iron-input.html">
+  <link rel="import" href="native-validators-config.html">
 
 </head>
 <body>
@@ -58,6 +61,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template>
       <no-cats for="customCats" message="custom cats"></no-cats>
       <test-validatable validator="no-cats" validatable-id="customCats"></test-validatable>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="native-basic">
+    <template>
+      <native-validators-config></native-validators-config>
+      <input is="iron-input" validator="required cats-only dogs-only" required>
+      <input is="iron-input" validator="min step" min="5" step="22" type="number" value="3">
+    </template>
+  </test-fixture>
+
+  <test-fixture id="native-all">
+    <template>
+      <div>
+        <!-- since maxlength and minlength don't seem to trigger validity api, they are excluded below-->
+        <native-validators-config></native-validators-config>
+        <input is="iron-input" validator="required" required value="">
+        <input is="iron-input" validator="max" max="100" type="number" value="200">
+        <input is="iron-input" validator="min" min="50" type="number" value="25">
+        <input is="iron-input" validator="emailtype" type="email" value="nonsense">
+        <input is="iron-input" validator="urltype" type="url" value="nonsense">
+        <input is="iron-input" validator="step" step="3" type="number" value="2" wrong-value="1">
+        <input is="iron-input" validator="pattern" pattern="[A-Za-z]{3}" value="nonsense">
+      </div>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="override-native-validity-api">
+    <template>
+      <div>
+        <native-validators-config></native-validators-config>
+        <input is="iron-input" validator="maxlength" maxlength="3" value="1" wrong-value="four">
+        <input is="iron-input" validator="minlength" minlength="2" value="" wrong-value="1">
+      </div>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="override-native-messages">
+    <template>
+      <div>
+        <iron-native-validator validator-name="min" message="customMin" for="cm"></iron-native-validator>
+        <input is="iron-input" validator="min" type="number" min="10" value="9" validatable-id="cm">
+      </div>
     </template>
   </test-fixture>
 
@@ -159,6 +205,88 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         validatable.validate('cats');
         assert.equal(validatable.errors[0].message, 'custom cats');
       });
+
+    });
+
+    suite('native validators', function() {
+
+      test('native validator can be mixed with custom validators', function() {
+        var validatable = fixture('native-basic')[1];
+        validatable.value = '';
+        validatable.validate();
+
+        assert.equal(validatable.errors[0].name, 'required');
+        assert.equal(validatable.errors[0].priority, 0);
+
+        assert.equal(validatable.errors[1].name, 'cats-only');
+        assert.equal(validatable.errors[1].priority, 1);
+
+        assert.equal(validatable.errors[2].name, 'dogs-only');
+        assert.equal(validatable.errors[2].priority, 2);
+      });
+
+      test('native validators can be combined', function() {
+        var validatable = fixture('native-basic')[2];
+        validatable.value = '2';
+        validatable.validate();
+
+        assert.equal(validatable.errors[0].name, 'min');
+        assert.equal(validatable.errors[0].priority, 0);
+        assert.equal(validatable.errors[1].name, 'step');
+        assert.equal(validatable.errors[1].priority, 1);
+      });
+
+      test('native validators can contain custom messages', function() {
+        var validatable = fixture('override-native-messages').querySelector('[min]');
+        validatable.validate();
+
+        assert.equal(validatable.errors[0].name, 'min');
+        assert.equal(validatable.errors[0].message, 'customMin');
+      });
+
+      suite('all native validations(including messages), one by one', function() {
+
+        var mapping;
+        setup(function() {
+          mapping = fixture('native-all').querySelector('native-validators-config').messages;
+        });
+
+        test('validation works and message is set properly', function() {
+          Object.keys(mapping).forEach(function(validator) {
+            var validatable = fixture('native-all').querySelector('[validator="' + validator + '"]');
+            if(!validatable) {
+              return;
+            } // maxlength and minlength validity don't seem to be supported right now in FF? Testing in wct chrome seems not to work either
+
+            var msg = mapping[validator];
+            if(validatable.getAttribute('wrong-value'))
+              validatable.value = validatable.getAttribute('wrong-value');
+
+            validatable.validate();
+
+            assert.equal(validatable.errors[0].name, validator, 'Validator [' + validator + '] is not triggered');
+            assert.equal(validatable.errors[0].message, msg, 'Validation message for validator [' + validator + '] is not set properly');
+          });
+        });
+
+        test('validity API can be overridden', function() {
+          Object.keys(mapping).forEach(function(validator) {
+            var validatable = fixture('override-native-validity-api').querySelector('[validator="' + validator + '"]');
+            if(!validatable) return; // maxlength and minlength only present in fixture, ignore the rest
+
+            var msg = mapping[validator];
+            if(validatable.getAttribute('wrong-value'))
+              validatable.value = validatable.getAttribute('wrong-value');
+
+            validatable.validate();
+
+            assert.equal(validatable.errors[0].name, validator, 'Validator [' + validator + '] is not triggered');
+            assert.equal(validatable.errors[0].message, msg, 'Validation message for validator [' + validator + '] is not set properly');
+          });
+        });
+
+      });
+
 
     });
 

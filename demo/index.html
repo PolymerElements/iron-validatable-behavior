@@ -20,6 +20,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../../paper-styles/demo-pages.html">
+
+  <link rel="import" href="../../iron-validator-behavior/iron-native-validator.html">
+
   <link rel="import" href="validators/cats-only.html">
   <link rel="import" href="validators/no-cats.html">
   <link rel="import" href="validators/no-catfishes.html">
@@ -44,11 +47,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template is="dom-bind">
 
-    <cats-only></cats-only>
-    <no-catfishes for="customCatfish" message="Custom catfish message"></no-catfishes>
 
     <section>
 
+      <cats-only></cats-only>
       <p>
         only type <code>cats</code>:<br/>
 
@@ -58,6 +60,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <span class="invalid" hidden$="[[!invalid.a]]">invalid</span>
       </p>
 
+
+      <no-catfishes for="customCatfish" message="Custom catfish message"></no-catfishes>
       <p>
         no <code>cat(fishes)</code>:<br/>
 
@@ -65,6 +69,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <br/>
         <span class="valid" hidden$="[[invalid.b]]">valid</span>
         <template is="dom-repeat" items="[[errors]]">
+          <div class="invalid">[[item.priority]]: [[item.message]]</div>
+        </template>
+
+      </p>
+
+      <iron-native-validator validator-name="required" message="Please fill in"></iron-native-validator>
+      <p>
+        no <code>cat(s)</code> and required:<br/>
+
+        <input id="customAndNative"  is="validatable-input" invalid="{{invalid.c}}" validator="required no-cats" required errors="{{errors2}}">
+        <br/>
+        <span class="valid" hidden$="[[invalid.c]]">valid</span>
+        <template is="dom-repeat" items="[[errors2]]">
           <div class="invalid">[[item.priority]]: [[item.message]]</div>
         </template>
 
@@ -78,7 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
     var scope = document.querySelector('template[is="dom-bind"]');
-    scope.invalid = { a: false, b: false };
+    scope.invalid = { a: false, b: false, c: false };
   </script>
 
 </body>
