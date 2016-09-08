@@ -185,10 +185,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var validatable = fixture('multipleValidators')[2];
         validatable.validate('cat');
         assert.equal(validatable.errors.length, 2);
-        assert.equal(validatable.errors[0].name, 'no-cats');
+        assert.equal(validatable.errors[0].validator, 'no-cats');
         assert.equal(validatable.errors[0].message, 'No cat(s) allowed');
         assert.equal(validatable.errors[0].priority, 0);
-        assert.equal(validatable.errors[1].name, 'no-catfishes');
+        assert.equal(validatable.errors[1].validator, 'no-catfishes');
         assert.equal(validatable.errors[1].message, 'No cat(fish(es)) allowed');
         assert.equal(validatable.errors[1].priority, 1);
       });
@@ -215,13 +215,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         validatable.value = '';
         validatable.validate();
 
-        assert.equal(validatable.errors[0].name, 'required');
+        assert.equal(validatable.errors[0].validator, 'required');
         assert.equal(validatable.errors[0].priority, 0);
 
-        assert.equal(validatable.errors[1].name, 'cats-only');
+        assert.equal(validatable.errors[1].validator, 'cats-only');
         assert.equal(validatable.errors[1].priority, 1);
 
-        assert.equal(validatable.errors[2].name, 'dogs-only');
+        assert.equal(validatable.errors[2].validator, 'dogs-only');
         assert.equal(validatable.errors[2].priority, 2);
       });
 
@@ -230,9 +230,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         validatable.value = '2';
         validatable.validate();
 
-        assert.equal(validatable.errors[0].name, 'min');
+        assert.equal(validatable.errors[0].validator, 'min');
         assert.equal(validatable.errors[0].priority, 0);
-        assert.equal(validatable.errors[1].name, 'step');
+        assert.equal(validatable.errors[1].validator, 'step');
         assert.equal(validatable.errors[1].priority, 1);
       });
 
@@ -240,7 +240,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var validatable = fixture('override-native-messages').querySelector('[min]');
         validatable.validate();
 
-        assert.equal(validatable.errors[0].name, 'min');
+        assert.equal(validatable.errors[0].validator, 'min');
         assert.equal(validatable.errors[0].message, 'customMin');
       });
 
@@ -264,7 +264,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             validatable.validate();
 
-            assert.equal(validatable.errors[0].name, validator, 'Validator [' + validator + '] is not triggered');
+            assert.equal(validatable.errors[0].validator, validator, 'Validator [' + validator + '] is not triggered');
             assert.equal(validatable.errors[0].message, msg, 'Validation message for validator [' + validator + '] is not set properly');
           });
         });
@@ -280,7 +280,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             validatable.validate();
 
-            assert.equal(validatable.errors[0].name, validator, 'Validator [' + validator + '] is not triggered');
+            assert.equal(validatable.errors[0].validator, validator, 'Validator [' + validator + '] is not triggered');
             assert.equal(validatable.errors[0].message, msg, 'Validation message for validator [' + validator + '] is not set properly');
           });
         });

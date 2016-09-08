@@ -35,6 +35,9 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "resolutions": {
+    "paper-input": "feature/multipleValidators",
+    "iron-validator-behavior": "feature/multipleValidators",
+    "iron-input": "feature/multipleValidators",
     "iron-validatable-behavior": "feature/multipleValidators"
   }
 }
