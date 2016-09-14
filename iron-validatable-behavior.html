@@ -44,14 +44,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   Polymer.IronValidatableBehavior = {
 
     properties: {
-
       /**
        * Name of the validator to use.
        */
       validator: {
         type: String
       },
-
+      
       /**
        * True if the last call to `validate` is invalid.
        */
@@ -114,12 +113,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * your element to have custom validation logic, do not override this method;
      * override `_getValidity(value)` instead.
 
-     * @param {Object} value The value to be validated. By default, it is passed
-     * to the validator's `validate()` function, if a validator is set.
+     * @param {Object} value Deprecated: The value to be validated. By default,
+     * it is passed to the validator's `validate()` function, if a validator is set.
+     * If this argument is not specified, then the element's `value` property
+     * is used, if it exists.
      * @return {boolean} True if `value` is valid.
      */
     validate: function(value) {
-      this.invalid = !this._getValidity(value);
+      // If this is an element that also has a value property, and there was
+      // no explicit value argument passed, use the element's property instead.
+      if (value === undefined && this.value !== undefined)
+        this.invalid = !this._getValidity(this.value);
+      else
+        this.invalid = !this._getValidity(value);
       return !this.invalid;
     },
 
