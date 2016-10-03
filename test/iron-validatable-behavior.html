@@ -74,13 +74,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         input.validator = 'cats-only';
         assert.isFalse(input.validate('ca'));
         assert.isTrue(input.validate('cats'));
+        
+        // Only valid if the value is 'lizards'.
+        input.validator = (value) => value === 'lizards';
+        assert.isFalse(input.validate('cats'));
+        assert.isTrue(input.validate('lizards'));
 
         // Only valid if the value is 'dogs'.
         input.validator = 'dogs-only';
         assert.isFalse(input.validate('cats'));
         assert.isTrue(input.validate('dogs'));
       });
-
     });
 
   </script>
