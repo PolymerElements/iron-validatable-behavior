@@ -58,18 +58,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         notify: true,
         reflectToAttribute: true,
         type: Boolean,
-        value: false
+        value: false,
+        observer: '_invalidChanged'
       },
-
-      _validator: {
-        type: Object,
-        computed: '__computeValidator(validator)'
-      }
     },
-
-    observers: [
-      '_invalidChanged(invalid)'
-    ],
 
     registered: function() {
       Polymer.IronValidatableBehaviorMeta = new Polymer.IronMeta({type: 'validator'});
@@ -81,6 +73,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       } else {
         this.removeAttribute('aria-invalid');
       }
+    },
+
+    /* Recompute this every time it's needed, because we don't know if the
+     * underlying IronValidatableBehaviorMeta has changed. */
+    get _validator() {
+      return Polymer.IronValidatableBehaviorMeta &&
+          Polymer.IronValidatableBehaviorMeta.byKey(this.validator);
     },
 
     /**
@@ -126,11 +125,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this._validator.validate(value);
       }
       return true;
-    },
-
-    __computeValidator: function(validator) {
-      return Polymer.IronValidatableBehaviorMeta &&
-          Polymer.IronValidatableBehaviorMeta.byKey(validator);
     }
   };
 
