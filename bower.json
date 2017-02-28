@@ -30,9 +30,6 @@
     "web-component-tester": "Polymer/web-component-tester#^6.0.0-prerelease.6",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0-rc.1"
   },
-  "resolutions": {
-    "test-fixture": "^2.0.0"
-  },
   "variants": {
     "1.x": {
       "dependencies": {
