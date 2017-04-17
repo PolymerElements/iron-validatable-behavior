@@ -46,10 +46,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     properties: {
 
       /**
-       * Name of the validator to use.
+       * Name of the validator to use, or the validating function.
+       * @type {string|function(Object):boolean}
        */
       validator: {
-        type: String
+        type: Object
       },
 
       /**
@@ -140,9 +141,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return true;
     },
 
-    __computeValidator: function() {
-      return Polymer.IronValidatableBehaviorMeta &&
-          Polymer.IronValidatableBehaviorMeta.byKey(this.validator);
+    /**
+     * Retrieves the validator.
+     *
+     * @param {string|function(Object):boolean} validator
+     *   The validator name or function.
+     * @return {!{validate: function(Object):boolean}} The validator.
+     */
+    __computeValidator: function(validator) {
+      if (typeof validator === 'function') {
+        return {validate: validator};
+      } else {
+        return Polymer.IronValidatableBehaviorMeta &&
+            Polymer.IronValidatableBehaviorMeta.byKey(validator);
+      }
     }
   };
 
