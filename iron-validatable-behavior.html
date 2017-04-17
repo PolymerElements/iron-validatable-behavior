@@ -12,10 +12,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../iron-meta/iron-meta.html">
 
 <script>
+
+(function() {
+
   /**
-   * Singleton IronMeta instance.
+   * Singleton IronMeta instances.
    */
-  Polymer.IronValidatableBehaviorMeta = null;
+  var customMeta = null;
+  var nativeMeta = null;
 
   /**
    * `Use Polymer.IronValidatableBehavior` to implement an element that validates user input.
@@ -46,7 +50,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     properties: {
 
       /**
-       * Name of the validator to use.
+       * Name of the validator(s) to use.
+       * Accepts a list of validators, separated by spaces.
+       * Note that the order of the validators determines the priority of the error messages.
        */
       validator: {
         type: String
@@ -83,7 +89,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _validator: {
         type: Object,
         computed: '__computeValidator(validator)'
+      },
+
+      /**
+       * Array holding error objects for the current state of the validatable element.
+       * Each error has the following keys:
+       * <ul>
+       * <li><b>validator</b> (String) : name of custom validator instance with IronValidatorBehavior</li>
+       * <li><b>message</b> (String) : message that is assigned to the validator instance</li>
+       * <li><b>priority</b> (Number) : priority of the error message, based on order supplied in validator property</li>
+       * </ul>
+       */
+      errors: {
+        type: Array,
+        readOnly: true,
+        notify: true,
+        value: function() {
+          return [];
+        }
+      },
+
+      /**
+       * The id used to connect the validator instance implementing IronValidatableBehavior(having a 'for' property)
+       * to the validatable. This is useful for validator instances containing custom messages.
+       */
+      validatableId: {
+        type: String,
+        value: ''
       }
+
     },
 
     observers: [
@@ -91,7 +125,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     ],
 
     registered: function() {
-      Polymer.IronValidatableBehaviorMeta = new Polymer.IronMeta({type: 'validator'});
+      customMeta = new Polymer.IronMeta({type: 'validator'});
+      nativeMeta = new Polymer.IronMeta({type: 'native-validator'});
     },
 
     _invalidChanged: function() {
@@ -132,18 +167,71 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @param {Object} value The value to be validated.
      * @return {boolean} True if `value` is valid.
      */
-
     _getValidity: function(value) {
-      if (this.hasValidator()) {
-        return this._validator.validate(value);
-      }
-      return true;
+      this._fillErrorArray(value);
+      return this.errors.length === 0;
     },
 
+    /**
+     * Fills the errors property with objects as described in errors documentation.
+     * @param {Object} value The value to be validated.
+     */
+    _fillErrorArray: function(value) {
+      var index = 0;
+      this._setErrors([]);
+
+      // Fill error array that is prioritized based on order of arguments in validator attribute
+      for (var v in this._validator) {
+        if (!this._validator[v].validate(value, this)) {
+          this.push('errors', {
+            validator: this._validator[v].validatorName,
+            message: this._validator[v].message,
+            priority: index
+          });
+          index++;
+        }
+      }
+    },
+
+    /**
+     * Creates an object with multiple validators.
+     *
+     * @return {Object} validators The validators to be executed.
+     */
     __computeValidator: function() {
-      return Polymer.IronValidatableBehaviorMeta &&
-          Polymer.IronValidatableBehaviorMeta.byKey(this.validator);
+      var result = {};
+      var suffix = '--' + this.validatableId; // Suffix needed for specific instances of custom validators, overriding the default error message
+      var validators = this.validator.replace(/\s+/g, ' ').split(' ');
+
+      // Gather all meta information from custom and native validators
+      var meta = {custom: customMeta, native: nativeMeta};
+
+      validators.forEach(function(v) {
+        // Custom validators need to be web components and will therefore always contain a hyphen.
+        // Native validators (think of required, maxlength etc.) never contain a hyphen.
+        var type = v.indexOf('-') !== -1 ? 'custom' : 'native';
+
+        // Custom instance exists
+        if (meta[type] && meta[type].byKey(v + suffix)) {
+          result[v] = meta[type].byKey(v + suffix);
+        }
+        // Default instance exists
+        else if (meta[type] && meta[type].byKey(v)) {
+          result[v] = meta[type].byKey(v);
+        }
+        // No instance at all, create one for custom validators.
+        // (Instantiating native validators via iron-native validator wouldn't make sense here, since
+        // they don't have messages by default and an instance will be present if message is supplied. )
+        else if (type === 'custom' && (!meta[type] || !meta[type].byKey(v))) {
+          result[v] = document.createElement(v);
+        }
+      }, this);
+
+      return result;
     }
+
   };
+
+ }());
 
 </script>

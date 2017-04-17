@@ -20,10 +20,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../../paper-styles/demo-pages.html">
-  <link rel="import" href="cats-only.html">
+
+  <link rel="import" href="../../iron-validator-behavior/iron-native-validator.html">
+
+  <link rel="import" href="validators/cats-only.html">
+  <link rel="import" href="validators/no-cats.html">
+  <link rel="import" href="validators/no-catfishes.html">
   <link rel="import" href="validatable-input.html">
 
-  <style is="custom-style">
+  <style is="custom-style" include="paper-styles">
 
     .valid {
       color: var(--google-green-500);
@@ -42,17 +47,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template is="dom-bind">
 
-    <cats-only></cats-only>
 
     <section>
 
+      <cats-only></cats-only>
       <p>
-        only type <code>cats</code>:
+        only type <code>cats</code>:<br/>
 
-        <input is="validatable-input" invalid="{{invalid}}" validator="cats-only">
+        <input is="validatable-input" invalid="{{invalid.a}}" validator="cats-only">
+        <br/>
+        <span class="valid" hidden$="[[invalid.a]]">valid</span>
+        <span class="invalid" hidden$="[[!invalid.a]]">invalid</span>
+      </p>
 
-        <span class="valid" hidden$="[[invalid]]">valid</span>
-        <span class="invalid" hidden$="[[!invalid]]">invalid</span>
+
+      <no-catfishes for="customCatfish" message="Custom catfish message"></no-catfishes>
+      <p>
+        no <code>cat(fishes)</code>:<br/>
+
+        <input id="multiple" validatable-id="customCatfish" is="validatable-input" invalid="{{invalid.b}}" validator="no-cats no-catfishes" errors="{{errors}}">
+        <br/>
+        <span class="valid" hidden$="[[invalid.b]]">valid</span>
+        <template is="dom-repeat" items="[[errors]]">
+          <div class="invalid">[[item.priority]]: [[item.message]]</div>
+        </template>
+
+      </p>
+
+      <iron-native-validator validator-name="required" message="Please fill in"></iron-native-validator>
+      <p>
+        no <code>cat(s)</code> and required:<br/>
+
+        <input id="customAndNative"  is="validatable-input" invalid="{{invalid.c}}" validator="required no-cats" required errors="{{errors2}}">
+        <br/>
+        <span class="valid" hidden$="[[invalid.c]]">valid</span>
+        <template is="dom-repeat" items="[[errors2]]">
+          <div class="invalid">[[item.priority]]: [[item.message]]</div>
+        </template>
+
       </p>
 
     </section>
@@ -62,9 +94,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </div>
 
   <script>
-
-    document.querySelector('template[is="dom-bind"]').invalid = false;
-
+    var scope = document.querySelector('template[is="dom-bind"]');
+    scope.invalid = { a: false, b: false, c: false };
   </script>
 
 </body>

@@ -1,0 +1,192 @@
+<!doctype html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>Multiple validators - Before and after</title>
+    <script src="../../../webcomponentsjs/webcomponents-lite.min.js"></script>
+
+    <link rel="stylesheet" href="../../../prism/themes/prism.css">
+
+
+    <link rel="import" href="../../../paper-styles/demo-pages.html">
+
+    <link rel="import" href="no-cats-or-catfishes.html">
+
+    <link rel="import" href="../../../paper-input/paper-input.html">
+    <link rel="import" href="../../../paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="../../../paper-dialog/paper-dialog.html">
+    <link rel="import" href="../../../paper-button/paper-button.html">
+
+    <link rel="import" href="native-validators-config.html">
+
+
+</head>
+<body unresolved>
+
+
+<template is="dom-bind" id="scope">
+
+    <script src="../../../prism/prism.js"></script>
+
+    <style>
+        paper-dialog {
+            width: 976px;
+            margin: auto;
+        }
+    </style>
+
+
+    <native-validators-config></native-validators-config>
+
+    <div style="width:1024px; margin:auto;">
+
+        <form novalidate id="form">
+
+            <h1> Multiple validators </h1>
+
+            <p>
+                Scenario: add an animal with at least two characters, but cats and catfishes are not allowed.
+            </p>
+
+            <h2>Before</h2>
+            <ul>
+                <li>Make custom validator for specific case (new web component that combines logic of no-cats and
+                    no-dogs, see no-cats-or-catfishes.html)
+                </li>
+                <li>Instantiate custom validator</li>
+                <li>Add custom validator to input (add to validator attribute)</li>
+                <li>Add native validators to input (add as attribute)</li>
+                <li>Add custom error message</li>
+                <li>Eventually, keep track of validity state and dynamically change the error message</li>
+            </ul>
+
+            <script>
+
+                window.addEventListener('WebComponentsReady', function () {
+                    var input = document.getElementById('before').$.input;
+                    var validator = document.getElementById('combinedValidator');
+                    var scope = document.getElementById('scope');
+
+                    scope.msg = 'Make sure this field is not empty and contains at least two characters. Cats and catfishes are not allowed.';
+                    input.addEventListener('iron-input-validate', function setErrorMessage() {
+                        if (input.validity.valueMissing) {
+                            scope.msg = 'Please fill in this field';
+                        } else if (input.validity.patternMismatch) {
+                            scope.msg = 'Use at least two characters';
+                            /* Note the custom validator can only be assigned to one input when using it to store state of sub validators. */
+                        } else if (!validator.validState.noCats) {
+                            scope.msg = 'No cat(s) allowed';
+                        } else if (!validator.validState.noCatfishes) {
+                            scope.msg = 'No cat(fish(es)) allowed';
+                        }
+                    });
+                });
+
+            </script>
+
+            <no-cats-or-catfishes id="combinedValidator"></no-cats-or-catfishes>
+
+            <paper-input id="before" label="Your favorite animal (*)" auto-validate
+                           validator="no-cats-or-catfishes" required pattern=".{2,}"
+                           error-message="[[msg]]">
+            </paper-input>
+
+            <paper-button raised onclick="beforeSrc.open()">View sources</paper-button>
+
+            <paper-dialog id="beforeSrc">
+
+                <h3>Before: sources</h3>
+
+                <h4>Javascript</h4>
+                <pre>
+<code class="language-javascript">window.addEventListener('WebComponentsReady', function () {
+    var input = document.getElementById('before').$.input;
+    var validator = document.getElementById('combinedValidator');
+    var scope = document.getElementById('scope');
+
+    scope.msg = 'Make sure this field is not empty and contains at least two characters. Cats and catfishes are not allowed.';
+    input.addEventListener('iron-input-validate', function setErrorMessage() {
+        if (input.validity.valueMissing) {
+            scope.msg = 'Please fill in this field';
+        } else if (input.validity.patternMismatch) {
+            scope.msg = 'Use at least two characters';
+            // Note the custom validator can only be assigned to one input when using it to store state of sub validators.
+        } else if (!validator.validState.noCats) {
+            scope.msg = 'No cat(s) allowed';
+        } else if (!validator.validState.noCatfishes) {
+            scope.msg = 'No cat(fish(es)) allowed';
+        }
+    });
+});</code>
+</pre>
+
+                <h4>HTML</h4>
+
+
+                <pre>
+<code class="language-html">&lt;no-cats-or-catfishes id=&quot;combinedValidator&quot;&gt;&lt;/no-cats-or-catfishes&gt;
+
+&lt;paper-input id=&quot;before&quot; label=&quot;Your favorite animal (*)&quot; auto-validate
+    validator=&quot;no-cats-or-catfishes&quot; required pattern=&quot;.{2,}&quot;
+    error-message=&quot;&#91;&#91;msg&#93;&#93;&quot;&gt;
+&lt;/paper-input&gt;</code>
+</pre>
+
+
+                <h4>External validator</h4>
+
+                <p>See 'no-cats-or-catfishes.html' ...</p>
+
+                <div class="buttons">
+                    <paper-button dialog-confirm autofocus>Close</paper-button>
+                </div>
+            </paper-dialog>
+
+            <h2>After</h2>
+
+            <ul>
+                <li>Add custom validators to input (add to validator attribute)</li>
+                <li>Add native validators to input (add to validator and as attribute)</li>
+            </ul>
+
+            <p>
+                (Note that no-cats has a higher priority than no-catfishes and its error message will therefore take
+                precedence over that of no-catfishes)
+            </p>
+
+            <paper-input id="after" label="Your favorite animal (*)" auto-validate
+                           validator="required pattern no-cats no-catfishes" required pattern=".{2,}">
+            </paper-input>
+
+
+            <paper-button raised onclick="afterSrc.open()">View sources</paper-button>
+
+
+            <paper-dialog id="afterSrc">
+                <h3>After: sources</h3>
+
+                <h4>HTML</h4>
+                <pre><code class="language-html">&lt;paper-input id=&quot;after&quot; label=&quot;Your favorite animal (*)&quot; auto-validate
+    validator=&quot;required pattern no-cats no-catfishes&quot; required pattern=&quot;.{2,}&quot;&gt;
+&lt;/paper-input&gt;</code>
+</pre>
+
+                <h4>Native messages configuration</h4>
+
+                <p>See 'native-validators-config.html'(this configuration is needed once on a global level) ...</p>
+
+                <div class="buttons">
+                    <paper-button dialog-confirm autofocus>Close</paper-button>
+                </div>
+
+            </paper-dialog>
+        </form>
+
+    </div>
+
+</template>
+
+</body>
+</html>

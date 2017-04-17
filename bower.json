@@ -25,9 +25,19 @@
   "devDependencies": {
     "paper-styles": "PolymerElements/paper-styles#^1.0.4",
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^1.0.0",
+    "iron-validator-behavior": "https://github.com/tlouisse/iron-validator-behavior.git#feature/multipleValidators",
+    "paper-input": "https://github.com/tlouisse/paper-input.git#feature/multipleValidators",
+    "iron-input": "https://github.com/tlouisse/iron-input.git#feature/multipleValidators",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.0.0",
     "test-fixture": "PolymerElements/test-fixture#^1.0.0",
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "resolutions": {
+    "paper-input": "feature/multipleValidators",
+    "iron-validator-behavior": "feature/multipleValidators",
+    "iron-input": "feature/multipleValidators",
+    "iron-validatable-behavior": "feature/multipleValidators"
   }
 }
