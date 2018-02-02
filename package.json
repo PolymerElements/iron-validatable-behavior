@@ -1,0 +1,10 @@
+{
+  "name": "@polymer/iron-validatable-behavior",
+  "private": true,
+  "description": "Provides a behavior for an element that validates user input",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-validatable-behavior.git"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt"
+}
