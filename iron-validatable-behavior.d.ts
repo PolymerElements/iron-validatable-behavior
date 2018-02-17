@@ -45,14 +45,14 @@ declare namespace Polymer {
      * True if the last call to `validate` is invalid.
      */
     invalid: boolean|null|undefined;
-    registered(): any;
-    _invalidChanged(): any;
 
     /**
-     * Recompute this every time it's needed, because we don't know if the
+     *  Recompute this every time it's needed, because we don't know if the
      * underlying IronValidatableBehaviorMeta has changed.
      */
-    _validator(): any;
+    readonly _validator: any;
+    registered(): void;
+    _invalidChanged(): void;
 
     /**
      * @returns True if the validator `validator` exists.
