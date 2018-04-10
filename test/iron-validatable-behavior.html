@@ -45,13 +45,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </test-fixture>
 
   <script>
-
     suite('basic', function() {
-
       test('setting `invalid` sets `aria-invalid=true`', function() {
         var node = fixture('basic');
         node.invalid = true;
-        assert.equal(node.getAttribute('aria-invalid'), 'true', 'aria-invalid is set');
+        assert.equal(
+            node.getAttribute('aria-invalid'), 'true', 'aria-invalid is set');
         node.invalid = false;
         assert.isFalse(node.hasAttribute('aria-invalid'), 'aria-invalid is unset');
       });
@@ -80,9 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         assert.isFalse(input.validate('cats'));
         assert.isTrue(input.validate('dogs'));
       });
-
     });
-
   </script>
 
 </body>
