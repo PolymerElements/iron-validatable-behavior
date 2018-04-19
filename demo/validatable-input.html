@@ -29,21 +29,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'validatable-input',
-      properties: {
-        invalid: {
-          reflectToAttribute: true,
-          type: Boolean,
-          value: false
-        }
-      },
+      properties:
+          {invalid: {reflectToAttribute: true, type: Boolean, value: false}},
 
-      behaviors: [
-        Polymer.IronValidatableBehavior
-      ],
+      behaviors: [Polymer.IronValidatableBehavior],
 
-      listeners: {
-        'input': '_onInput'
-      },
+      listeners: {'input': '_onInput'},
 
       _onInput: function() {
         this.invalid = !this.validate(this.$.input.value);
