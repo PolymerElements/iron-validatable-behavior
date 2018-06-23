@@ -1,31 +1,19 @@
 language: node_js
 sudo: 'false'
-before_script:
-  - npm install -g polymer-cli
-  - polymer install --variants
-  - >-
-    npm run update-types && git diff --exit-code || (echo -e
-    '\n\033[31mERROR:\033[0m Typings are stale. Please run "npm run
-    update-types".' && false)
-  - >-
-    npm run format && git diff --exit-code || (echo -e '\n\033[31mERROR:\033[0m
-    Project is not formatted. Please run "npm run format".' && false)
+before_script: npm install -g polymer-cli
 env:
   global:
-    - secure: >-
-        slh3FKFD5qXRSnl8dhLkZ8EuELL8XJIdVk8uIhPyFs7br8QfketmQVRV5IM3mOWqRoEOKrmN6eCNA1MIAeFg/927IcjTpUHtDELy2S89G9FnjwwRkD3Vw41JIuOJAGgbeIhJh0wdlk581/S33vrMGVrj8arxLERsnewyfhbWyoA=
-    - secure: >-
-        l81I/Q9VpsVQFAWZqgmX1uBNxPWEjXNumZBygoM4GZu/xqNYd9UjTx67Ku1JY35v2E8YhQC5OruoZtSgjeAO0dBTsnQOKoS6dEw+/qOZewe7/oNyj8dKm8WK3b6BBNLGzwAAnqjtf1pyzKrCEP3ePKwDwfvorAJrX92R1HygtXQ=
+    - secure: slh3FKFD5qXRSnl8dhLkZ8EuELL8XJIdVk8uIhPyFs7br8QfketmQVRV5IM3mOWqRoEOKrmN6eCNA1MIAeFg/927IcjTpUHtDELy2S89G9FnjwwRkD3Vw41JIuOJAGgbeIhJh0wdlk581/S33vrMGVrj8arxLERsnewyfhbWyoA=
+    - secure: l81I/Q9VpsVQFAWZqgmX1uBNxPWEjXNumZBygoM4GZu/xqNYd9UjTx67Ku1JY35v2E8YhQC5OruoZtSgjeAO0dBTsnQOKoS6dEw+/qOZewe7/oNyj8dKm8WK3b6BBNLGzwAAnqjtf1pyzKrCEP3ePKwDwfvorAJrX92R1HygtXQ=
 node_js: '9'
 addons:
   firefox: latest
   chrome: stable
 script:
-  - xvfb-run polymer test
-  - >-
-    if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then polymer test -s 'default';
-    fi
+  - xvfb-run polymer test --module-resolution=node --npm
+  - 'if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then polymer test --module-resolution=node --npm -s ''default''; fi'
 dist: trusty
 cache:
   directories:
     - node_modules
+
