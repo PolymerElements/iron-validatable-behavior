@@ -16,16 +16,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 
   <title>iron-validatable-behavior demo</title>
-
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-
-  <script type="module" src="../../paper-styles/color.js"></script>
-  <script type="module" src="../../iron-demo-helpers/demo-snippet.js"></script>
-  <script type="module" src="../../iron-demo-helpers/demo-pages-shared-styles.js"></script>
-  <script type="module" src="./cats-only.js"></script>
-  <script type="module" src="./validatable-input.js"></script>
+  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
 
   <script type="module">
+  import '@polymer/paper-styles/color.js';
+  import '@polymer/iron-demo-helpers/demo-snippet.js';
+  import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+  import './cats-only.js';
+  import './validatable-input.js';
+
     import {html} from '@polymer/polymer/lib/utils/html-tag.js';
     const template = html`
       <custom-style>
