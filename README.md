@@ -24,7 +24,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 import {IronValidatableBehavior} from '@polymer/iron-validatable-behavior/iron-validatable-behavior.js';
 
-class SampleElement extends  extends mixinBehaviors([IronValidatableBehavior], PolymerElement) {
+class SampleElement extends mixinBehaviors([IronValidatableBehavior], PolymerElement) {
   static get template() {
     return html`
       <style>
