@@ -2,7 +2,7 @@
 [![Build status](https://travis-ci.org/PolymerElements/iron-validatable-behavior.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-validatable-behavior)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://webcomponents.org/element/@polymer/iron-validatable-behavior)
 
-## &lt;iron-validatable-behavior&gt;
+## IronValidatableBehavior
 Use `IronValidatableBehavior` to implement an element that validates user input. By using this behaviour, your custom element will get a public `validate()` method, which
 will return the validity of the element, and a corresponding `invalid` attribute,
 which can be used for styling. Can be used alongside an element implementing
@@ -54,7 +54,7 @@ customElements.define('sample-element', SampleElement);
 ### In an html file using the element
 ```html
 <html>
-  <head>''
+  <head>
     <script type="module" src="./sample-element.js"></script>
   </head>
   <body>

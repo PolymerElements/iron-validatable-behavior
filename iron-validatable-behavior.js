@@ -18,14 +18,14 @@ import {IronMeta} from '@polymer/iron-meta/iron-meta.js';
 export let IronValidatableBehaviorMeta = null;
 
 /**
- * `Use Polymer.IronValidatableBehavior` to implement an element that validates
- * user input. Use the related `Polymer.IronValidatorBehavior` to add custom
+ * `Use IronValidatableBehavior` to implement an element that validates
+ * user input. Use the related `IronValidatorBehavior` to add custom
  * validation logic to an iron-input.
  *
  * By default, an `<iron-form>` element validates its fields when the user
  * presses the submit button. To validate a form imperatively, call the form's
  * `validate()` method, which in turn will call `validate()` on all its
- * children. By using `Polymer.IronValidatableBehavior`, your custom element
+ * children. By using `IronValidatableBehavior`, your custom element
  * will get a public `validate()`, which will return the validity of the
  * element, and a corresponding `invalid` attribute, which can be used for
  * styling.
