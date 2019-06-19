@@ -64,6 +64,7 @@ export const IronValidatableBehavior = {
     },
   },
 
+  /** @override */
   registered: function() {
     IronValidatableBehaviorMeta = new IronMeta({type: 'validator'});
   },
